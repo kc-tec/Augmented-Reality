@@ -2,225 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- This meta tag is crucial for mobile AR -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AR Text Statue - KCPTTC</title>
-    
-    <!-- A-Frame Library: The core for AR and 3D -->
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    
-    <!-- Tailwind CSS for styling the UI buttons and text -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Viewer for Students</title>
+    <!-- Imports Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <!-- Imports the <model-viewer> component -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <style>
+        /* Set a default font */
         body {
-            /* Use a common, clean font */
             font-family: 'Inter', sans-serif;
-        }
-        /* By default, the A-Frame 3D view is hidden */
-        .a-canvas {
-            display: none;
-        }
-        
-        /* This is the overlay that holds the button and instructions */
-        #ar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #000000cc; /* Semi-transparent black */
-            color: white;
-            z-index: 1000;
-        }
-        
-        /* This holds the "Tap to place" message */
-        #instructions {
-            display: none; /* Hidden by default */
-            text-align: center;
-            padding: 1rem;
-            background-color: #00000077;
-            border-radius: 0.5rem;
-            font-size: 1.1rem;
-            max-width: 80%;
-        }
-        
-        /* Styling for the "Start AR" button */
-        #ar-button {
-            background-color: #3B82F6; /* Blue */
-            color: white;
-            font-weight: bold;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            border: none;
-            font-size: 1.25rem;
-            cursor: pointer;
-            box-shadow: 0 4px 10px #00000044;
-            transition: all 0.2s ease;
-        }
-        #ar-button:hover {
-            background-color: #2563EB; /* Darker blue */
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
 
-    <!-- UI Overlay: This is what the user sees first -->
-    <div id="ar-overlay">
-        <div class="text-center p-6">
-            <h1 class="text-3xl font-bold mb-2">KCPTTC AR Statue</h1>
-            <p class="text-lg text-gray-300 mb-8">Place the 3D text in your world.</p>
-            <button id="ar-button">Start AR</button>
-        </div>
-        <div id="instructions">
-            Point your camera at a flat surface (like the floor) and tap the screen to place the statue!
-        </div>
-    </div>
-
-    <!-- 
-      A-Frame Scene (The 3D/AR world)
-      - webxr: Configures the AR session
-      - ar-hit-test: Enables finding surfaces in the real world
-    -->
-    <a-scene
-        webxr="requiredFeatures: hit-test,local-floor; optionalFeatures: dom-overlay; overlayElement: #ar-overlay;"
-        ar-hit-test="target: #reticle; type: hittest;"
-        renderer="colorManagement: true;">
-
-        <!-- 
-          Asset Management
-          We load the 3D font file here. This font is used to generate
-          the 3D text geometry.
-        -->
-        <a-assets>
-            <a-asset-item id="font-json" src="https://cdn.jsdelivr.net/npm/three/examples/fonts/helvetiker_bold.typeface.json"></a-asset-item>
-        </a-assets>
-
-        <!-- AR Camera (What the user sees through) -->
-        <a-camera position="0 1.6 0"></a-camera>
-
-        <!-- 
-          Reticle (The placement cursor)
-          This small ring shows you where the text will be placed.
-          It's controlled by the 'ar-hit-test' on the <a-scene>.
-        -->
-        <a-entity id="reticle"
-            geometry="primitive: ring; radiusInner: 0.05; radiusOuter: 0.08;"
-            material="color: #3B82F6; shader: flat;"
-            rotation="-90 0 0"
-            visible="false">
-        </a-entity>
-
-        <!-- 
-          The 3D Text Statue
-          - text-geometry: Generates the 3D model from the text and font.
-          - material: Makes it look like shiny, metallic gold.
-          It's invisible at first and has no position.
-        -->
-        <a-entity
-            id="text-statue"
-            text-geometry="value: KCPTTC; font: #font-json; style: normal; size: 0.3; height: 0.05; bevelEnabled: true; bevelSize: 0.01; bevelThickness: 0.01;"
-            material="color: #FFD700; metalness: 0.8; roughness: 0.3;"
-            position="0 0 0"
-            visible="false"
-            shadow> <!-- This will cast a shadow -->
-        </a-entity>
-
-        <!-- Simple lighting to make the 3D text look good -->
-        <a-light type="ambient" color="#888"></a-light>
-        <a-light type="directional" color="#FFF" intensity="0.6" position="-1 1.5 1" castShadow="true"></a-light>
+    <div class="w-full max-w-2xl mx-auto">
         
-        <!-- A transparent plane to receive shadows on the floor -->
-        <a-plane
-            ar-shadows="opacity: 0.3"
-            rotation="-90 0 0"
-            height="100"
-            width="100"
-        ></a-plane>
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">Augmented Reality Demo</h1>
+            <p class="text-lg text-gray-300">See an astronaut in your world!</p>
+        </div>
 
-    </a-scene>
+        <!-- 
+          This is the AR component.
+          - src: The 3D model file (.glb is a common format)
+          - poster: A loading image
+          - ar: Enables the Augmented Reality button
+          - ar-modes: Tells it to use WebXR (Android) or Quick Look (iOS)
+          - camera-controls: Lets you spin the model in 3D
+          - auto-rotate: Spins the model automatically
+        -->
+        <model-viewer
+            src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+            poster="https://modelviewer.dev/shared-assets/models/Astronaut.png"
+            alt="A 3D model of an astronaut"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            auto-rotate
+            shadow-intensity="1"
+            class="w-full h-96 rounded-lg shadow-2xl bg-gray-800 border-2 border-gray-700">
+        </model-viewer>
 
-    <script>
-        // This JavaScript code handles the UI and the AR interaction
-        document.addEventListener('DOMContentLoaded', () => {
-            const sceneEl = document.querySelector('a-scene');
-            const arButton = document.getElementById('ar-button');
-            const instructionsEl = document.getElementById('instructions');
-            const welcomeTextEl = arButton.parentElement;
-            const textStatue = document.getElementById('text-statue');
-            const reticle = document.getElementById('reticle');
-            
-            let arSession = null;
+        <!-- Instructions for the students -->
+        <div class="mt-8 bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700">
+            <h2 class="text-2xl font-semibold mb-4 text-center">How to Use</h2>
+            <ol class="list-decimal list-inside space-y-3 text-gray-200">
+                <li>Open this webpage on your smartphone (iPhone or Android).</li>
+                <li>You'll see a 3D model of the astronaut spinning above.</li>
+                <li>Tap the <strong>AR icon</strong> in the bottom-right corner of the astronaut view. (It looks like a 3D cube or square).</li>
+                <li>Your camera will open. Point it at a <strong>flat, well-lit surface</strong> (like the floor or a desk).</li>
+                <li>Move your phone around slowly until the astronaut appears. You can then walk around it!</li>
+            </ol>
+        </div>
 
-            // Check if the browser supports AR
-            if (navigator.xr) {
-                navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-                    if (supported) {
-                        arButton.style.display = 'block';
-                    } else {
-                        arButton.textContent = 'AR Not Supported';
-                        arButton.disabled = true;
-                    }
-                });
-            } else {
-                arButton.textContent = 'AR Not Supported';
-                arButton.disabled = true;
-            }
-
-            // Handle "Start AR" button click
-            arButton.addEventListener('click', async () => {
-                try {
-                    // Enter AR session
-                    arSession = await sceneEl.sceneEl.renderer.xr.getSession();
-                    
-                    // Show the A-Frame 3D view
-                    sceneEl.sceneEl.canvas.style.display = 'block';
-                    
-                    // Update UI: Hide welcome, show instructions
-                    welcomeTextEl.style.display = 'none';
-                    instructionsEl.style.display = 'block';
-                    arButton.style.display = 'none';
-
-                    // Listen for the 'select' event (a tap on the screen)
-                    arSession.addEventListener('select', onSelect);
-
-                } catch (e) {
-                    console.error("Failed to start AR session:", e);
-                    arButton.textContent = 'Failed to Start AR';
-                }
-            });
-            
-            // This function is called when the user taps the screen in AR
-            function onSelect() {
-                // Check if the reticle (cursor) is visible (meaning it found a surface)
-                if (reticle.object3D.visible) {
-                    // Get the position from the reticle
-                    const position = reticle.object3D.position;
-                    
-                    // Set the text statue's position to where the reticle is
-                    textStatue.setAttribute('position', position);
-                    
-                    // Make the text statue visible
-                    textStatue.setAttribute('visible', 'true');
-                }
-            }
-
-            // Show the reticle when hit-test starts
-            sceneEl.addEventListener('ar-hit-test-start', () => {
-                reticle.setAttribute('visible', 'true');
-            });
-
-            // Hide the reticle when hit-test stops
-            sceneEl.addEventListener('ar-hit-test-stop', () => {
-                reticle.setAttribute('visible', 'false');
-            });
-
-        });
-    </script>
+    </div>
 
 </body>
 </html>
