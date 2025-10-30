@@ -112,10 +112,25 @@
             if (model.animationName) {
                 viewer.setAttribute('animation-name', model.animationName);
                 viewer.setAttribute('autoplay', 'true');
+                
+                // CRITICAL FIX FOR AR ANIMATION: 
+                // To ensure animation plays in AR (Quick Look/Scene Viewer), 
+                // the animation name must be directly passed to the AR modes.
+                const arModes = viewer.getAttribute('ar-modes');
+                if (arModes.includes('quick-look') && !arModes.includes(`ar-animations="${model.animationName}"`)) {
+                    // This attribute is often required by iOS Quick Look to play the animation in AR.
+                    viewer.setAttribute('ar-modes', `${arModes} ar-animations="${model.animationName}"`);
+                }
+
             } else {
                 // Otherwise, remove both attributes to ensure static models stay static
                 viewer.removeAttribute('animation-name');
                 viewer.removeAttribute('autoplay');
+                
+                // Clean up ar-animations attribute if present
+                let arModes = viewer.getAttribute('ar-modes');
+                arModes = arModes.replace(/ar-animations="[^"]*"/, '').trim();
+                viewer.setAttribute('ar-modes', arModes);
             }
             
             // Remove active state from all buttons
@@ -143,6 +158,8 @@
             // Set the first model as active initially and load it
             if (index === 0) {
                 button.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'ring-2', 'ring-indigo-300');
+                // Ensure initial load sets correct AR/Animation state
+                setTimeout(() => updateViewer(model, null), 0); 
             } else {
                 button.classList.add('bg-gray-700', 'hover:bg-gray-600');
             }
