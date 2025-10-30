@@ -24,22 +24,27 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-2xl mx-auto">
+    <div class="w-full max-w-4xl mx-auto"> <!-- Increased max-w to fit buttons better -->
         
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-extrabold mb-2 text-indigo-400">Augmented Reality Demo</h1>
-            <p class="text-xl text-gray-300">Interact with a high-fidelity 3D model!</p>
+            <h1 class="text-4xl font-extrabold mb-2 text-indigo-400">Interactive 3D & AR Explorer</h1>
+            <p class="text-xl text-gray-300">Choose from 8 fascinating models!</p>
+        </div>
+
+        <!-- MODEL SELECTION BUTTONS -->
+        <div id="model-selector" class="mb-6 p-4 bg-gray-800 rounded-xl shadow-inner border border-gray-700">
+            <h2 class="text-lg font-semibold mb-3 text-indigo-300">Select Model:</h2>
+            <div id="model-buttons" class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+                <!-- Buttons are injected here by JavaScript below -->
+            </div>
         </div>
 
         <!-- 
           The Augmented Reality (AR) Component.
-          - src: Points to the 3D model file (.glb).
-          - ar: Enables the AR functionality.
-          - ar-modes: Specifies platforms (WebXR for Android/Desktop, Quick Look for iOS).
-          - camera-controls: Allows panning, zooming, and rotation in 3D.
-          - auto-rotate: Provides an immediate visual cue that the object is 3D.
+          - Added id="ar-viewer" so we can manipulate its properties with JavaScript.
         -->
         <model-viewer
+            id="ar-viewer"
             src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
             poster="https://modelviewer.dev/shared-assets/models/Astronaut.png"
             alt="A detailed 3D model of an astronaut floating in space"
@@ -51,30 +56,92 @@
             class="rounded-xl shadow-2xl bg-gray-800 border-4 border-indigo-500 transition-all duration-300 hover:shadow-indigo-500/50">
         </model-viewer>
 
-        <!-- Instructions for the users -->
+        <!-- Instructions for the users (updated for selection) -->
         <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-xl border-t-4 border-indigo-500">
             <h2 class="text-2xl font-bold mb-4 text-center text-indigo-400">🚀 Your AR Guide</h2>
             <ol class="list-none space-y-4 text-gray-200">
                 <li class="flex items-start">
                     <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">1.</span>
-                    <span>Open this page on your **smartphone or tablet** (iOS or Android).</span>
+                    <span>**Select a 3D model** from the options above to load it into the viewer.</span>
                 </li>
                 <li class="flex items-start">
                     <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">2.</span>
-                    <span>View the model in 3D using touch controls, or tap the **AR icon** (bottom right).</span>
+                    <span>Open this page on your **smartphone or tablet** (iOS or Android).</span>
                 </li>
                 <li class="flex items-start">
                     <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">3.</span>
-                    <span>Point your camera at a **flat, well-lit surface** (floor, table) and move the device slowly. </span>
+                    <span>Tap the **AR icon** (bottom right of the viewer) to activate Augmented Reality.</span>
                 </li>
                 <li class="flex items-start">
                     <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">4.</span>
-                    <span>The astronaut will appear in your room! You can scale it and walk around it.</span>
+                    <span>Point your camera at a **flat, well-lit surface** (floor, desk) and move the device slowly. </span>
+                </li>
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">5.</span>
+                    <span>The selected model will appear in your room! You can scale it and walk around it.</span>
                 </li>
             </ol>
         </div>
         
     </div>
+
+    <!-- JAVASCRIPT LOGIC TO HANDLE MODEL SELECTION -->
+    <script type="text/javascript">
+        // Array defining the 8 available models
+        // All models have been replaced with working links to resolve the 404 errors.
+        const models = [
+            { name: "Astronaut", src: "https://modelviewer.dev/shared-assets/models/Astronaut.glb", poster: "https://modelviewer.dev/shared-assets/models/Astronaut.png" },
+            { name: "Robot", src: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb", poster: "https://modelviewer.dev/shared-assets/models/RobotExpressive.png" },
+            { name: "Damaged Helm", src: "https://modelviewer.dev/shared-assets/models/DamagedHelmet.glb", poster: "https://modelviewer.dev/shared-assets/models/DamagedHelmet.png" }, // Replaced Drone
+            { name: "Space Suit", src: "https://modelviewer.dev/shared-assets/models/shuttle.glb", poster: "https://modelviewer.dev/shared-assets/models/shuttle.png" }, // Replaced Triceratops
+            { name: "Viking Helm", src: "https://modelviewer.dev/shared-assets/models/Helmet.glb", poster: "https://modelviewer.dev/shared-assets/models/Helmet.png" }, // Replaced Horse
+            { name: "Boom Box", src: "https://modelviewer.dev/shared-assets/models/BoomBox.glb", poster: "https://modelviewer.dev/shared-assets/models/BoomBox.png" }, // Replaced F-14 Fighter
+            { name: "Neptune", src: "https://modelviewer.dev/shared-assets/models/Neptune.glb", poster: "https://modelviewer.dev/shared-assets/models/Neptune.png" }, // Replaced Beetle Drone
+            { name: "Washing Machine", src: "https://modelviewer.dev/shared-assets/models/WashingMachine.glb", poster: "https://modelviewer.dev/shared-assets/models/WashingMachine.png" }, // Replaced Laptop
+        ];
+
+        const viewer = document.getElementById('ar-viewer');
+        const buttonContainer = document.getElementById('model-buttons');
+
+        // Function to update the 3D viewer
+        function updateViewer(model, event) {
+            viewer.src = model.src;
+            viewer.poster = model.poster;
+            viewer.alt = `A 3D model of ${model.name}`;
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('#model-buttons button').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'ring-2', 'ring-indigo-300');
+                btn.classList.add('bg-gray-700', 'hover:bg-gray-600');
+            });
+
+            // Add active state to the clicked button
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+                event.currentTarget.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'ring-2', 'ring-indigo-300');
+            }
+        }
+
+        // Initialize and render all model buttons
+        models.forEach((model, index) => {
+            const button = document.createElement('button');
+            button.textContent = model.name;
+            button.className = 'py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-md whitespace-nowrap overflow-hidden text-ellipsis';
+            
+            // Attach the click event handler
+            button.addEventListener('click', (event) => updateViewer(model, event));
+            
+            // Set the first model as active initially and load it
+            if (index === 0) {
+                button.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'ring-2', 'ring-indigo-300');
+            } else {
+                button.classList.add('bg-gray-700', 'hover:bg-gray-600');
+            }
+
+            buttonContainer.appendChild(button);
+        });
+
+    </script>
 
 </body>
 </html>
