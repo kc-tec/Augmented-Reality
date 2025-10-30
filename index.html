@@ -6,12 +6,19 @@
     <title>AR Viewer for Students</title>
     <!-- Imports Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Imports the <model-viewer> component -->
+    <!-- Imports the <model-viewer> component (essential for 3D and AR) -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <style>
-        /* Set a default font */
+        /* Set the Inter font for a modern look */
         body {
             font-family: 'Inter', sans-serif;
+        }
+        /* Ensure the model viewer takes up space elegantly */
+        model-viewer {
+            width: 100%;
+            /* Use viewport height for better responsiveness across devices */
+            height: 60vh; 
+            --poster-color: #374151; /* Tailwind gray-700 equivalent */
         }
     </style>
 </head>
@@ -20,45 +27,54 @@
     <div class="w-full max-w-2xl mx-auto">
         
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold mb-2">Augmented Reality Demo</h1>
-            <p class="text-lg text-gray-300">See an astronaut in your world!</p>
+            <h1 class="text-4xl font-extrabold mb-2 text-indigo-400">Augmented Reality Demo</h1>
+            <p class="text-xl text-gray-300">Interact with a high-fidelity 3D model!</p>
         </div>
 
         <!-- 
-          This is the AR component.
-          - src: The 3D model file (.glb is a common format)
-          - poster: A loading image
-          - ar: Enables the Augmented Reality button
-          - ar-modes: Tells it to use WebXR (Android) or Quick Look (iOS)
-          - camera-controls: Lets you spin the model in 3D
-          - auto-rotate: Spins the model automatically
+          The Augmented Reality (AR) Component.
+          - src: Points to the 3D model file (.glb).
+          - ar: Enables the AR functionality.
+          - ar-modes: Specifies platforms (WebXR for Android/Desktop, Quick Look for iOS).
+          - camera-controls: Allows panning, zooming, and rotation in 3D.
+          - auto-rotate: Provides an immediate visual cue that the object is 3D.
         -->
         <model-viewer
             src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
             poster="https://modelviewer.dev/shared-assets/models/Astronaut.png"
-            alt="A 3D model of an astronaut"
+            alt="A detailed 3D model of an astronaut floating in space"
             ar
             ar-modes="webxr scene-viewer quick-look"
             camera-controls
             auto-rotate
-            shadow-intensity="1"
-            class="w-full h-96 rounded-lg shadow-2xl bg-gray-800 border-2 border-gray-700">
+            shadow-intensity="1.5"
+            class="rounded-xl shadow-2xl bg-gray-800 border-4 border-indigo-500 transition-all duration-300 hover:shadow-indigo-500/50">
         </model-viewer>
 
-        <!-- Instructions for the students -->
-        <div class="mt-8 bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700">
-            <h2 class="text-2xl font-semibold mb-4 text-center">How to Use</h2>
-            <ol class="list-decimal list-inside space-y-3 text-gray-200">
-                <li>Open this webpage on your smartphone (iPhone or Android).</li>
-                <li>You'll see a 3D model of the astronaut spinning above.</li>
-                <li>Tap the <strong>AR icon</strong> in the bottom-right corner of the astronaut view. (It looks like a 3D cube or square).</li>
-                <li>Your camera will open. Point it at a <strong>flat, well-lit surface</strong> (like the floor or a desk).</li>
-                <li>Move your phone around slowly until the astronaut appears. You can then walk around it!</li>
+        <!-- Instructions for the users -->
+        <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-xl border-t-4 border-indigo-500">
+            <h2 class="text-2xl font-bold mb-4 text-center text-indigo-400">🚀 Your AR Guide</h2>
+            <ol class="list-none space-y-4 text-gray-200">
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">1.</span>
+                    <span>Open this page on your **smartphone or tablet** (iOS or Android).</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">2.</span>
+                    <span>View the model in 3D using touch controls, or tap the **AR icon** (bottom right).</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">3.</span>
+                    <span>Point your camera at a **flat, well-lit surface** (floor, table) and move the device slowly. </span>
+                </li>
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 mr-3 text-indigo-400 font-bold text-lg">4.</span>
+                    <span>The astronaut will appear in your room! You can scale it and walk around it.</span>
+                </li>
             </ol>
         </div>
-
+        
     </div>
 
 </body>
 </html>
-
