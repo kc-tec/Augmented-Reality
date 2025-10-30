@@ -28,13 +28,14 @@
         
         <div class="text-center mb-8">
             <h1 class="text-4xl font-extrabold mb-2 text-indigo-400">Interactive 3D & AR Explorer</h1>
-            <p class="text-xl text-gray-300">Choose from 8 fascinating models!</p>
+            <p class="text-xl text-gray-300">Choose from 4 fascinating models!</p>
         </div>
 
         <!-- MODEL SELECTION BUTTONS -->
         <div id="model-selector" class="mb-6 p-4 bg-gray-800 rounded-xl shadow-inner border border-gray-700">
             <h2 class="text-lg font-semibold mb-3 text-indigo-300">Select Model:</h2>
-            <div id="model-buttons" class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+            <!-- Updated grid class: Now uses a 2x2 grid on mobile and a 4-column grid on large screens -->
+            <div id="model-buttons" class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4"> 
                 <!-- Buttons are injected here by JavaScript below -->
             </div>
         </div>
@@ -87,17 +88,14 @@
 
     <!-- JAVASCRIPT LOGIC TO HANDLE MODEL SELECTION -->
     <script type="text/javascript">
-        // Array defining the 8 available models
-        // All models have been replaced with working links to resolve the 404 errors.
+        // Array defining the 4 available models (reduced from 8)
         const models = [
             { name: "Astronaut", src: "https://modelviewer.dev/shared-assets/models/Astronaut.glb", poster: "https://modelviewer.dev/shared-assets/models/Astronaut.png" },
             { name: "Robot", src: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb", poster: "https://modelviewer.dev/shared-assets/models/RobotExpressive.png" },
-            { name: "Damaged Helm", src: "https://modelviewer.dev/shared-assets/models/DamagedHelmet.glb", poster: "https://modelviewer.dev/shared-assets/models/DamagedHelmet.png" }, // Replaced Drone
-            { name: "Space Suit", src: "https://modelviewer.dev/shared-assets/models/shuttle.glb", poster: "https://modelviewer.dev/shared-assets/models/shuttle.png" }, // Replaced Triceratops
-            { name: "Viking Helm", src: "https://modelviewer.dev/shared-assets/models/Helmet.glb", poster: "https://modelviewer.dev/shared-assets/models/Helmet.png" }, // Replaced Horse
-            { name: "Boom Box", src: "https://modelviewer.dev/shared-assets/models/BoomBox.glb", poster: "https://modelviewer.dev/shared-assets/models/BoomBox.png" }, // Replaced F-14 Fighter
-            { name: "Neptune", src: "https://modelviewer.dev/shared-assets/models/Neptune.glb", poster: "https://modelviewer.dev/shared-assets/models/Neptune.png" }, // Replaced Beetle Drone
-            { name: "Washing Machine", src: "https://modelviewer.dev/shared-assets/models/WashingMachine.glb", poster: "https://modelviewer.dev/shared-assets/models/WashingMachine.png" }, // Replaced Laptop
+            // Replaced broken "Fox" model with the working "Cactus" model
+            { name: "Cactus", src: "https://modelviewer.dev/shared-assets/models/Cactus.glb", poster: "https://modelviewer.dev/shared-assets/models/Cactus.png" },
+            // Replaced broken "Pistol" model with the working "T-Rex" model
+            { name: "T-Rex", src: "https://modelviewer.dev/shared-assets/models/TyrannosaurusRex.glb", poster: "https://modelviewer.dev/shared-assets/models/TyrannosaurusRex.png" },
         ];
 
         const viewer = document.getElementById('ar-viewer');
