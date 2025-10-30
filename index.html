@@ -91,10 +91,10 @@
         // Array defining the 4 available models (reduced from 8)
         const models = [
             { name: "Astronaut", src: "https://modelviewer.dev/shared-assets/models/Astronaut.glb", poster: "https://modelviewer.dev/shared-assets/models/Astronaut.png" },
-            { name: "Robot", src: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb", poster: "https://modelviewer.dev/shared-assets/models/RobotExpressive.png" },
-            // Replaced broken "Fox" model with the working "Cactus" model
+            // The Robot model includes a specific animation clip to play
+            { name: "Robot", src: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb", poster: "https://modelviewer.dev/shared-assets/models/RobotExpressive.png", animationName: "Wave" },
+            // Replacement for broken models
             { name: "Cactus", src: "https://modelviewer.dev/shared-assets/models/Cactus.glb", poster: "https://modelviewer.dev/shared-assets/models/Cactus.png" },
-            // Replaced broken "Pistol" model with the working "T-Rex" model
             { name: "T-Rex", src: "https://modelviewer.dev/shared-assets/models/TyrannosaurusRex.glb", poster: "https://modelviewer.dev/shared-assets/models/TyrannosaurusRex.png" },
         ];
 
@@ -106,6 +106,17 @@
             viewer.src = model.src;
             viewer.poster = model.poster;
             viewer.alt = `A 3D model of ${model.name}`;
+
+            // Handle animation logic: 
+            // If the model has an animationName defined, set it and enable autoplay.
+            if (model.animationName) {
+                viewer.setAttribute('animation-name', model.animationName);
+                viewer.setAttribute('autoplay', 'true');
+            } else {
+                // Otherwise, remove both attributes to ensure static models stay static
+                viewer.removeAttribute('animation-name');
+                viewer.removeAttribute('autoplay');
+            }
             
             // Remove active state from all buttons
             document.querySelectorAll('#model-buttons button').forEach(btn => {
